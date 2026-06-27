@@ -158,124 +158,170 @@ export class UpsCard extends LitElement {
 
   }
 
-  renderSvg(level:number,color:string){
+  renderSvg(level, color) {
 
-      return html`
+    const width = Math.max(0, Math.min(100, Number(level))) * 1.1;
 
-<svg viewBox="0 0 220 320">
+    return html`
+
+<svg viewBox="0 0 260 340">
+
+<defs>
+
+<linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+
+<stop offset="0%" stop-color="#2b2b2b"/>
+
+<stop offset="100%" stop-color="#171717"/>
+
+</linearGradient>
+
+<filter id="glow">
+
+<feGaussianBlur stdDeviation="6" result="blur"/>
+
+<feMerge>
+
+<feMergeNode in="blur"/>
+
+<feMergeNode in="SourceGraphic"/>
+
+</feMerge>
+
+</filter>
+
+<linearGradient id="batteryFill" x1="0" y1="0" x2="1" y2="0">
+
+<stop offset="0%" stop-color="${color}"/>
+
+<stop offset="100%" stop-color="#ffffff"/>
+
+</linearGradient>
+
+</defs>
+
 
 <rect
-
 x="30"
-
 y="20"
-
-width="160"
-
-height="260"
-
-rx="18"
-
-fill="#1d1d1d"
-
+width="200"
+height="290"
+rx="24"
+fill="url(#body)"
 stroke="${color}"
-
-stroke-width="4"
-
+stroke-width="3"
+filter="url(#glow)"
 />
 
 <text
-
-x="110"
-
-y="60"
-
+x="130"
+y="55"
 fill="white"
-
+font-size="22"
 text-anchor="middle"
-
-font-size="18"
-
 font-weight="700"
-
 >
 
 UPS
 
 </text>
 
-<rect
-
-x="55"
-
-y="110"
-
-width="110"
-
-height="34"
-
-rx="6"
-
-fill="none"
-
-stroke="white"
-
-stroke-width="2"
-
-/>
-
-<rect
-
-x="57"
-
-y="112"
-
-width="${level}"
-
-height="30"
-
-rx="4"
-
+<circle
+cx="130"
+cy="82"
+r="6"
 fill="${color}"
-
+filter="url(#glow)"
 >
 
 <animate
+attributeName="opacity"
+values="1;0.3;1"
+dur="2s"
+repeatCount="indefinite"
+/>
 
+</circle>
+
+
+<rect
+x="55"
+y="120"
+width="150"
+height="34"
+rx="8"
+fill="#101010"
+stroke="#888"
+/>
+
+<rect
+x="58"
+y="123"
+width="${width}"
+height="28"
+rx="6"
+fill="url(#batteryFill)"
+>
+
+<animate
 attributeName="width"
-
-dur="700ms"
-
-to="${level}"
-
+dur="0.7s"
+to="${width}"
 fill="freeze"
-
 />
 
 </rect>
 
+
 <text
-
-x="110"
-
-y="190"
-
+x="130"
+y="200"
 fill="white"
-
-font-size="30"
-
+font-size="34"
+font-weight="700"
 text-anchor="middle"
-
 >
 
 ${level}%
 
 </text>
 
+
+<text
+x="130"
+y="235"
+fill="#bdbdbd"
+font-size="16"
+text-anchor="middle"
+>
+
+BATTERY
+
+</text>
+
+
+<g>
+
+<circle cx="130" cy="275" r="3" fill="${color}">
+<animate attributeName="cy" values="260;245;230" dur="1.4s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0;1;0" dur="1.4s" repeatCount="indefinite"/>
+</circle>
+
+<circle cx="120" cy="285" r="2" fill="${color}">
+<animate attributeName="cy" values="270;255;240" dur="1.8s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0;1;0" dur="1.8s" repeatCount="indefinite"/>
+</circle>
+
+<circle cx="140" cy="285" r="2" fill="${color}">
+<animate attributeName="cy" values="270;255;240" dur="1.2s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite"/>
+</circle>
+
+</g>
+
 </svg>
 
 `;
-
   }
 
   entity(id:string){
