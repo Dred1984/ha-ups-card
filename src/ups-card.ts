@@ -160,7 +160,25 @@ export class UpsCard extends LitElement {
 
   renderSvg(level, color) {
 
-    const width = Math.max(0, Math.min(100, Number(level))) * 1.1;
+    const percent = Math.max(0, Math.min(100, Number(level)));
+    const segments = 10;
+
+    let battery = "";
+
+    for (let i = 0; i < segments; i++) {
+
+        const active = i < Math.round(percent / 10);
+
+        battery += `
+        <rect
+            x="${58 + i * 15}"
+            y="122"
+            width="12"
+            height="28"
+            rx="2"
+            fill="${active ? color : "#2b2b2b"}">
+        </rect>`;
+    }
 
     return html`
 
@@ -168,162 +186,151 @@ export class UpsCard extends LitElement {
 
 <defs>
 
-<linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
-
-<stop offset="0%" stop-color="#2b2b2b"/>
-
-<stop offset="100%" stop-color="#171717"/>
-
+<linearGradient id="case" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#343434"/>
+    <stop offset="100%" stop-color="#151515"/>
 </linearGradient>
 
-<filter id="glow">
-
-<feGaussianBlur stdDeviation="6" result="blur"/>
-
-<feMerge>
-
-<feMergeNode in="blur"/>
-
-<feMergeNode in="SourceGraphic"/>
-
-</feMerge>
-
+<filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="6" result="blur"/>
+    <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+    </feMerge>
 </filter>
-
-<linearGradient id="batteryFill" x1="0" y1="0" x2="1" y2="0">
-
-<stop offset="0%" stop-color="${color}"/>
-
-<stop offset="100%" stop-color="#ffffff"/>
-
-</linearGradient>
 
 </defs>
 
+<!-- Корпус -->
 
 <rect
 x="30"
 y="20"
 width="200"
-height="290"
-rx="24"
-fill="url(#body)"
+height="285"
+rx="22"
+fill="url(#case)"
 stroke="${color}"
 stroke-width="3"
 filter="url(#glow)"
-/>
+></rect>
+
+<!-- Верхняя панель -->
+
+<rect
+x="40"
+y="30"
+width="180"
+height="48"
+rx="10"
+fill="#202020"
+></rect>
 
 <text
 x="130"
-y="55"
+y="60"
 fill="white"
-font-size="22"
-text-anchor="middle"
+font-size="18"
 font-weight="700"
->
+text-anchor="middle">
 
-UPS
+INNITTA UPS
 
 </text>
 
+<!-- Светодиод -->
+
 <circle
-cx="130"
-cy="82"
-r="6"
+cx="62"
+cy="54"
+r="5"
 fill="${color}"
-filter="url(#glow)"
->
+filter="url(#glow)">
 
 <animate
 attributeName="opacity"
-values="1;0.3;1"
-dur="2s"
-repeatCount="indefinite"
-/>
+values="1;.4;1"
+dur="1.5s"
+repeatCount="indefinite"/>
 
 </circle>
 
+<text
+x="75"
+y="58"
+fill="#cfcfcf"
+font-size="11">
+
+Power
+
+</text>
+
+<!-- Батарея -->
 
 <rect
-x="55"
-y="120"
-width="150"
-height="34"
+x="52"
+y="118"
+width="156"
+height="36"
 rx="8"
-fill="#101010"
-stroke="#888"
-/>
-
-<rect
-x="58"
-y="123"
-width="${width}"
-height="28"
-rx="6"
-fill="url(#batteryFill)"
->
-
-<animate
-attributeName="width"
-dur="0.7s"
-to="${width}"
-fill="freeze"
-/>
-
+fill="#111"
+stroke="#666">
 </rect>
 
+${unsafeHTML(battery)}
+
+<!-- Процент -->
 
 <text
 x="130"
-y="200"
+y="190"
 fill="white"
 font-size="34"
 font-weight="700"
-text-anchor="middle"
->
+text-anchor="middle">
 
-${level}%
+${percent}%
 
 </text>
-
 
 <text
 x="130"
-y="235"
-fill="#bdbdbd"
-font-size="16"
-text-anchor="middle"
->
+y="214"
+fill="#BEBEBE"
+font-size="14"
+text-anchor="middle">
 
-BATTERY
+BATTERY LEVEL
 
 </text>
 
+<!-- Нижняя панель -->
 
-<g>
+<rect
+x="48"
+y="245"
+width="164"
+height="42"
+rx="8"
+fill="#202020">
+</rect>
 
-<circle cx="130" cy="275" r="3" fill="${color}">
-<animate attributeName="cy" values="260;245;230" dur="1.4s" repeatCount="indefinite"/>
-<animate attributeName="opacity" values="0;1;0" dur="1.4s" repeatCount="indefinite"/>
-</circle>
+<text
+x="130"
+y="271"
+fill="${color}"
+font-size="18"
+font-weight="700"
+text-anchor="middle">
 
-<circle cx="120" cy="285" r="2" fill="${color}">
-<animate attributeName="cy" values="270;255;240" dur="1.8s" repeatCount="indefinite"/>
-<animate attributeName="opacity" values="0;1;0" dur="1.8s" repeatCount="indefinite"/>
-</circle>
+ONLINE
 
-<circle cx="140" cy="285" r="2" fill="${color}">
-<animate attributeName="cy" values="270;255;240" dur="1.2s" repeatCount="indefinite"/>
-<animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite"/>
-</circle>
-
-</g>
+</text>
 
 </svg>
 
 `;
-  }
-
+}
   entity(id:string){
 
       const state=this.hass.states[id];
