@@ -1,0 +1,17 @@
+{
+  "name": "ha-ups-card",
+  "version": "0.1.0",
+  "description": "Animated UPS Card for Home Assistant",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "lit": "^3.2.0",
+    "rollup": "^4.35.0",
+    "typescript": "^5.8.2"
+  }
+}
